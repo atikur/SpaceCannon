@@ -13,7 +13,10 @@ class GameScene: SKScene {
     var cannon: SKSpriteNode!
     var didShoot = false
     
-    let ballSpeed: CGFloat = 1000
+    let ballSpeed: CGFloat = 1000.0
+    let haloLowAngle: CGFloat = 200.0 * CGFloat(M_PI/180)
+    let haloHighAngle: CGFloat = 340.0 * CGFloat(M_PI/180)
+    let haloSpeed: CGFloat = 100.0
     
     override func didMoveToView(view: SKView) {
         // turn off gravity
@@ -52,6 +55,16 @@ class GameScene: SKScene {
         let halfRotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 2)
         let rotateAction = SKAction.sequence([halfRotateAction, halfRotateAction.reversedAction()])
         cannon.runAction(SKAction.repeatActionForever(rotateAction))
+        
+        // spawn halo
+        let spawnHaloAction = SKAction.runBlock {
+            self.spawnHalo()
+        }
+        
+        let waitAction = SKAction.waitForDuration(2, withRange: 1)
+        
+        let spawnHaloSequence = SKAction.sequence([spawnHaloAction, waitAction])
+        self.runAction(SKAction.repeatActionForever(spawnHaloSequence))
     }
     
     func shoot() {
@@ -71,6 +84,28 @@ class GameScene: SKScene {
         ball.physicsBody?.friction = 0.0
         
         mainLayer.addChild(ball)
+    }
+    
+    func spawnHalo() {
+        // create Halo node
+        let halo = SKSpriteNode(imageNamed: "Halo")
+        halo.position = CGPointMake(
+            CGFloat.random(min: halo.size.width/2, max: self.size.width/2 - halo.size.width/2),
+            self.size.height + halo.size.height/2)
+        
+        halo.physicsBody = SKPhysicsBody(circleOfRadius: halo.size.width/2)
+        
+        let direction = radiansToVector(CGFloat.random(min: haloLowAngle, max: haloHighAngle))
+        
+        halo.physicsBody?.velocity = CGVectorMake(
+            direction.dx * haloSpeed,
+            direction.dx * haloSpeed)
+        
+        halo.physicsBody?.restitution = 1.0
+        halo.physicsBody?.linearDamping = 0.0
+        halo.physicsBody?.friction = 0.0
+        
+        mainLayer.addChild(halo)
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
