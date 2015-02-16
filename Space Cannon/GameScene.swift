@@ -24,6 +24,21 @@ class GameScene: SKScene {
         background.blendMode = SKBlendMode.Replace
         self.addChild(background)
         
+        // add edges
+        let leftEdge = SKNode()
+        leftEdge.physicsBody = SKPhysicsBody(
+            edgeFromPoint: CGPointZero,
+            toPoint: CGPointMake(0, size.height))
+        leftEdge.position = CGPointZero
+        self.addChild(leftEdge)
+        
+        let rightEdge = SKNode()
+        rightEdge.physicsBody = SKPhysicsBody(
+            edgeFromPoint: CGPointZero,
+            toPoint: CGPointMake(0, size.height))
+        rightEdge.position = CGPointMake(size.width, 0)
+        self.addChild(rightEdge)
+        
         // add main layer
         mainLayer = SKNode()
         self.addChild(mainLayer)
@@ -50,6 +65,11 @@ class GameScene: SKScene {
         
         ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
         ball.physicsBody?.velocity = CGVectorMake(direction.dx * ballSpeed, direction.dy * ballSpeed)
+        
+        ball.physicsBody?.linearDamping = 0.0
+        ball.physicsBody?.restitution = 1.0
+        ball.physicsBody?.friction = 0.0
+        
         mainLayer.addChild(ball)
     }
     
