@@ -26,6 +26,7 @@
 		471F20171A91A83000D5DDEF /* Cannon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 471F200B1A91A83000D5DDEF /* Cannon@2x.png */; };
 		471F20181A91A83000D5DDEF /* Halo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 471F200C1A91A83000D5DDEF /* Halo@2x.png */; };
 		471F20191A91A83000D5DDEF /* Starfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 471F200D1A91A83000D5DDEF /* Starfield@2x.png */; };
+		471F201B1A91B0AF00D5DDEF /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471F201A1A91B0AF00D5DDEF /* MyUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		471F200B1A91A83000D5DDEF /* Cannon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Cannon@2x.png"; sourceTree = "<group>"; };
 		471F200C1A91A83000D5DDEF /* Halo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Halo@2x.png"; sourceTree = "<group>"; };
 		471F200D1A91A83000D5DDEF /* Starfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Starfield@2x.png"; sourceTree = "<group>"; };
+		471F201A1A91B0AF00D5DDEF /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				471F1FDD1A91A81500D5DDEF /* AppDelegate.swift */,
 				471F1FE11A91A81500D5DDEF /* GameScene.swift */,
 				471F1FE31A91A81500D5DDEF /* GameViewController.swift */,
+				471F201A1A91B0AF00D5DDEF /* MyUtils.swift */,
 				471F1FE51A91A81500D5DDEF /* Main.storyboard */,
 				471F1FE81A91A81500D5DDEF /* Images.xcassets */,
 				471F1FEA1A91A81500D5DDEF /* LaunchScreen.xib */,
@@ -274,6 +277,7 @@
 				471F1FE21A91A81500D5DDEF /* GameScene.swift in Sources */,
 				471F1FE41A91A81500D5DDEF /* GameViewController.swift in Sources */,
 				471F1FDE1A91A81500D5DDEF /* AppDelegate.swift in Sources */,
+				471F201B1A91B0AF00D5DDEF /* MyUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
