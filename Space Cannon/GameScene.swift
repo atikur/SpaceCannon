@@ -139,9 +139,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Ball {
             // collision between halo & ball
+            addExplosion(firstBody.node!.position)
+            
             firstBody.node?.removeFromParent()
             secondBody.node?.removeFromParent()
         }
+    }
+    
+    func addExplosion(point: CGPoint) {
+        let path = NSBundle.mainBundle().pathForResource("HaloExplosion", ofType: "sks")
+        
+        let explosion = NSKeyedUnarchiver.unarchiveObjectWithFile(path!) as SKEmitterNode
+        
+        explosion.position = point
+        self.addChild(explosion)
+        
+        let waitAction = SKAction.waitForDuration(1.5)
+        let removeAction = SKAction.removeFromParent()
+        explosion.runAction(SKAction.sequence([waitAction, removeAction]))
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {

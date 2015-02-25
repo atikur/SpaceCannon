@@ -27,6 +27,8 @@
 		471F20181A91A83000D5DDEF /* Halo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 471F200C1A91A83000D5DDEF /* Halo@2x.png */; };
 		471F20191A91A83000D5DDEF /* Starfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 471F200D1A91A83000D5DDEF /* Starfield@2x.png */; };
 		471F201B1A91B0AF00D5DDEF /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471F201A1A91B0AF00D5DDEF /* MyUtils.swift */; };
+		476685221A9E26440089138D /* HaloExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 476685201A9E26440089138D /* HaloExplosion.sks */; };
+		476685231A9E26440089138D /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 476685211A9E26440089138D /* spark.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +66,8 @@
 		471F200C1A91A83000D5DDEF /* Halo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Halo@2x.png"; sourceTree = "<group>"; };
 		471F200D1A91A83000D5DDEF /* Starfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Starfield@2x.png"; sourceTree = "<group>"; };
 		471F201A1A91B0AF00D5DDEF /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
+		476685201A9E26440089138D /* HaloExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = HaloExplosion.sks; path = ../HaloExplosion.sks; sourceTree = "<group>"; };
+		476685211A9E26440089138D /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = ../spark.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +115,8 @@
 				471F1FE31A91A81500D5DDEF /* GameViewController.swift */,
 				471F201A1A91B0AF00D5DDEF /* MyUtils.swift */,
 				471F1FE51A91A81500D5DDEF /* Main.storyboard */,
+				476685201A9E26440089138D /* HaloExplosion.sks */,
+				476685211A9E26440089138D /* spark.png */,
 				471F1FE81A91A81500D5DDEF /* Images.xcassets */,
 				471F1FEA1A91A81500D5DDEF /* LaunchScreen.xib */,
 				471F1FDB1A91A81500D5DDEF /* Supporting Files */,
@@ -247,6 +253,7 @@
 				471F1FEC1A91A81500D5DDEF /* LaunchScreen.xib in Resources */,
 				471F20131A91A83000D5DDEF /* Ammo5@2x.png in Resources */,
 				471F200F1A91A83000D5DDEF /* Ammo1@2x.png in Resources */,
+				476685221A9E26440089138D /* HaloExplosion.sks in Resources */,
 				471F20141A91A83000D5DDEF /* Ball@2x.png in Resources */,
 				471F1FE91A91A81500D5DDEF /* Images.xcassets in Resources */,
 				471F20111A91A83000D5DDEF /* Ammo3@2x.png in Resources */,
@@ -257,6 +264,7 @@
 				471F20191A91A83000D5DDEF /* Starfield@2x.png in Resources */,
 				471F20171A91A83000D5DDEF /* Cannon@2x.png in Resources */,
 				471F20121A91A83000D5DDEF /* Ammo4@2x.png in Resources */,
+				476685231A9E26440089138D /* spark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +477,7 @@
 				471F1FFD1A91A81500D5DDEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		471F1FFE1A91A81500D5DDEF /* Build configuration list for PBXNativeTarget "Space CannonTests" */ = {
 			isa = XCConfigurationList;
@@ -477,6 +486,7 @@
 				471F20001A91A81500D5DDEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
