@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>8A8F8515-7EF0-40CA-85B9-517B6670857F</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Space Cannon</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>56688DDDF06FDD0CB035398E85D5C78E344B90E6</key>
+		<string>github.com:atikur/SpaceCannon.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Space Cannon.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>56688DDDF06FDD0CB035398E85D5C78E344B90E6</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:atikur/SpaceCannon.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>56688DDDF06FDD0CB035398E85D5C78E344B90E6</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>56688DDDF06FDD0CB035398E85D5C78E344B90E6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Space%20Cannon</string>
+		</dict>
+	</array>
+</dict>
+</plist>

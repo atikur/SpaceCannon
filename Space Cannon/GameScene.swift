@@ -8,7 +8,15 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
+    
+    struct PhysicsCategory {
+        static let None: UInt32 = 0
+        static let Halo: UInt32 = 0b1
+        static let Ball: UInt32 = 0b10
+        static let Edge: UInt32 = 0b100
+    }
+    
     var mainLayer: SKNode!
     var cannon: SKSpriteNode!
     var didShoot = false
@@ -21,6 +29,7 @@ class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         // turn off gravity
         self.physicsWorld.gravity = CGVectorMake(0, 0)
+        self.physicsWorld.contactDelegate = self
         
         let background = SKSpriteNode(imageNamed: "StarField")
         background.position = CGPointMake(size.width/2, size.height/2)
@@ -32,6 +41,8 @@ class GameScene: SKScene {
         leftEdge.physicsBody = SKPhysicsBody(
             edgeFromPoint: CGPointZero,
             toPoint: CGPointMake(0, size.height))
+        leftEdge.physicsBody?.categoryBitMask = PhysicsCategory.Edge
+        
         leftEdge.position = CGPointZero
         self.addChild(leftEdge)
         
@@ -39,6 +50,7 @@ class GameScene: SKScene {
         rightEdge.physicsBody = SKPhysicsBody(
             edgeFromPoint: CGPointZero,
             toPoint: CGPointMake(0, size.height))
+        rightEdge.physicsBody?.categoryBitMask = PhysicsCategory.Edge
         rightEdge.position = CGPointMake(size.width, 0)
         self.addChild(rightEdge)
         
@@ -77,6 +89,8 @@ class GameScene: SKScene {
             cannon.position.y + cannon.size.width/2 * direction.dy)
         
         ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
+        ball.physicsBody?.categoryBitMask = PhysicsCategory.Ball
+        ball.physicsBody?.collisionBitMask = PhysicsCategory.Edge
         ball.physicsBody?.velocity = CGVectorMake(direction.dx * ballSpeed, direction.dy * ballSpeed)
         
         ball.physicsBody?.linearDamping = 0.0
@@ -94,6 +108,9 @@ class GameScene: SKScene {
             self.size.height + halo.size.height/2)
         
         halo.physicsBody = SKPhysicsBody(circleOfRadius: halo.size.width/2)
+        halo.physicsBody?.categoryBitMask = PhysicsCategory.Halo
+        halo.physicsBody?.collisionBitMask = PhysicsCategory.Edge
+        halo.physicsBody?.contactTestBitMask = PhysicsCategory.Ball
         
         let direction = radiansToVector(CGFloat.random(min: haloLowAngle, max: haloHighAngle))
         
@@ -106,6 +123,25 @@ class GameScene: SKScene {
         halo.physicsBody?.friction = 0.0
         
         mainLayer.addChild(halo)
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        var firstBody: SKPhysicsBody!
+        var secondBody: SKPhysicsBody!
+        
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            firstBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else {
+            firstBody = contact.bodyB
+            secondBody = contact.bodyA
+        }
+        
+        if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Ball {
+            // collision between halo & ball
+            firstBody.node?.removeFromParent()
+            secondBody.node?.removeFromParent()
+        }
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
