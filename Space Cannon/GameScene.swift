@@ -26,6 +26,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let haloHighAngle: CGFloat = 340.0 * CGFloat(M_PI/180)
     let haloSpeed: CGFloat = 100.0
     
+    var ammo: Int! {
+        didSet {
+            if ammo >= 0 && ammo <= 5 {
+                ammoDisplay.texture = SKTexture(imageNamed: "Ammo\(ammo)")
+            }
+        }
+    }
+    var ammoDisplay: SKSpriteNode!
+    
     override func didMoveToView(view: SKView) {
         // turn off gravity
         self.physicsWorld.gravity = CGVectorMake(0, 0)
@@ -77,9 +86,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let spawnHaloSequence = SKAction.sequence([spawnHaloAction, waitAction])
         self.runAction(SKAction.repeatActionForever(spawnHaloSequence))
+        
+        // setup ammo
+        ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
+        ammoDisplay.anchorPoint = CGPointMake(0.5, 0)
+        ammoDisplay.position = cannon.position
+        mainLayer.addChild(ammoDisplay)
+        ammo = 5
+        
+        // increment ammo
+        let incrementAmmoAction = SKAction.sequence([
+            SKAction.waitForDuration(1),
+            SKAction.runBlock {
+                if self.ammo < 5 {
+                    self.ammo = self.ammo + 1
+                }
+            }
+            ])
+        
+        self.runAction(SKAction.repeatActionForever(incrementAmmoAction))
     }
     
     func shoot() {
+        if ammo <= 0 {
+            return
+        }
+        
         let ball = SKSpriteNode(imageNamed: "Ball")
         let direction = radiansToVector(cannon.zRotation)
         
@@ -98,6 +130,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ball.physicsBody?.friction = 0.0
         
         mainLayer.addChild(ball)
+        
+        ammo = ammo - 1
     }
     
     func spawnHalo() {
