@@ -72,7 +72,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // add cannon
         cannon = SKSpriteNode(imageNamed: "Cannon")
         cannon.position = CGPointMake(size.width/2, 0)
-        mainLayer.addChild(cannon)
+        self.addChild(cannon)
         
         // rotate cannon
         let halfRotateAction = SKAction.rotateByAngle(CGFloat(M_PI), duration: 2)
@@ -93,8 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
         ammoDisplay.anchorPoint = CGPointMake(0.5, 0)
         ammoDisplay.position = cannon.position
-        mainLayer.addChild(ammoDisplay)
-        ammo = 5
+        self.addChild(ammoDisplay)
         
         // increment ammo
         let incrementAmmoAction = SKAction.sequence([
@@ -108,24 +107,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.runAction(SKAction.repeatActionForever(incrementAmmoAction))
         
-        // setup shields
-        for i in 0...5 {
-            let shield = SKSpriteNode(imageNamed: "Block")
-            shield.position = CGPointMake(CGFloat(35 + (50 * i)), 90)
-            shield.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(32, 9))
-            shield.physicsBody?.categoryBitMask = PhysicsCategory.Shield
-            shield.physicsBody?.collisionBitMask = PhysicsCategory.None
-            mainLayer.addChild(shield)
-        }
-        
-        // setup life bar
-        let lifeBar = SKSpriteNode(imageNamed: "BlueBar")
-        lifeBar.position = CGPointMake(self.size.width/2, 70)
-        lifeBar.physicsBody = SKPhysicsBody(
-            edgeFromPoint: CGPointMake(-lifeBar.size.width/2, 0),
-            toPoint: CGPointMake(lifeBar.size.width/2, 0))
-        lifeBar.physicsBody?.categoryBitMask = PhysicsCategory.LifeBar
-        mainLayer.addChild(lifeBar)
+       newGame()
     }
     
     func shoot() {
@@ -158,6 +140,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func spawnHalo() {
         // create Halo node
         let halo = SKSpriteNode(imageNamed: "Halo")
+        halo.name = "halo"
         halo.position = CGPointMake(
             CGFloat.random(min: halo.size.width/2, max: self.size.width/2 - halo.size.width/2),
             self.size.height + halo.size.height/2)
@@ -210,11 +193,62 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.LifeBar {
             // collision between halo & life bar
-            addExplosion(firstBody.node!.position)
             
-            firstBody.node?.removeFromParent()
             secondBody.node?.removeFromParent()
+            gameOver()
         }
+    }
+    
+    func newGame() {
+        ammo = 5
+        
+        mainLayer.removeAllChildren()
+        
+        // setup shields
+        for i in 0...5 {
+            let shield = SKSpriteNode(imageNamed: "Block")
+            shield.name = "shield"
+            shield.position = CGPointMake(CGFloat(35 + (50 * i)), 90)
+            shield.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(32, 9))
+            shield.physicsBody?.categoryBitMask = PhysicsCategory.Shield
+            shield.physicsBody?.collisionBitMask = PhysicsCategory.None
+            mainLayer.addChild(shield)
+        }
+        
+        // setup life bar
+        let lifeBar = SKSpriteNode(imageNamed: "BlueBar")
+        lifeBar.position = CGPointMake(self.size.width/2, 70)
+        lifeBar.physicsBody = SKPhysicsBody(
+            edgeFromPoint: CGPointMake(-lifeBar.size.width/2, 0),
+            toPoint: CGPointMake(lifeBar.size.width/2, 0))
+        lifeBar.physicsBody?.categoryBitMask = PhysicsCategory.LifeBar
+        mainLayer.addChild(lifeBar)
+    }
+    
+    func gameOver() {
+        mainLayer.enumerateChildNodesWithName("halo", usingBlock: {
+            node, _ in
+            self.addExplosion(node.position)
+            node.removeFromParent()
+        })
+        
+        mainLayer.enumerateChildNodesWithName("ball", usingBlock: {
+            node, _ in
+            node.removeFromParent()
+        })
+        
+        mainLayer.enumerateChildNodesWithName("shield", usingBlock: {
+            node, _ in
+            node.removeFromParent()
+        })
+        
+        // start new game
+        let newGameAction = SKAction.sequence([
+            SKAction.waitForDuration(1.5),
+            SKAction.runBlock(newGame)
+            ])
+        
+        self.runAction(newGameAction)
     }
     
     func addExplosion(point: CGPoint) {
