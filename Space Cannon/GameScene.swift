@@ -22,6 +22,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var mainLayer: SKNode!
     var cannon: SKSpriteNode!
     var didShoot = false
+    var scoreLabel: SKLabelNode!
     
     let ballSpeed: CGFloat = 1000.0
     let haloLowAngle: CGFloat = 200.0 * CGFloat(M_PI/180)
@@ -36,6 +37,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     var ammoDisplay: SKSpriteNode!
+    
+    var score: Int! {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
     
     override func didMoveToView(view: SKView) {
         // turn off gravity
@@ -107,7 +114,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.runAction(SKAction.repeatActionForever(incrementAmmoAction))
         
-       newGame()
+        // setup score label
+        scoreLabel = SKLabelNode(fontNamed: "Din Alternate")
+        scoreLabel.position = CGPointMake(15, 10)
+        scoreLabel.horizontalAlignmentMode = .Left
+        scoreLabel.fontSize = 15
+        self.addChild(scoreLabel)
+        
+        newGame()
     }
     
     func shoot() {
@@ -176,6 +190,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Ball {
+            score = score + 1
             // collision between halo & ball
             addExplosion(firstBody.node!.position)
             
@@ -201,6 +216,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func newGame() {
         ammo = 5
+        score = 0
         
         mainLayer.removeAllChildren()
         
