@@ -16,6 +16,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         static let Ball: UInt32     = 0b10
         static let Edge: UInt32     = 0b100
         static let Shield: UInt32   = 0b1000
+        static let LifeBar: UInt32  = 0b10000
     }
     
     var mainLayer: SKNode!
@@ -116,6 +117,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             shield.physicsBody?.collisionBitMask = PhysicsCategory.None
             mainLayer.addChild(shield)
         }
+        
+        // setup life bar
+        let lifeBar = SKSpriteNode(imageNamed: "BlueBar")
+        lifeBar.position = CGPointMake(self.size.width/2, 70)
+        lifeBar.physicsBody = SKPhysicsBody(
+            edgeFromPoint: CGPointMake(-lifeBar.size.width/2, 0),
+            toPoint: CGPointMake(lifeBar.size.width/2, 0))
+        lifeBar.physicsBody?.categoryBitMask = PhysicsCategory.LifeBar
+        mainLayer.addChild(lifeBar)
     }
     
     func shoot() {
@@ -155,7 +165,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         halo.physicsBody = SKPhysicsBody(circleOfRadius: halo.size.width/2)
         halo.physicsBody?.categoryBitMask = PhysicsCategory.Halo
         halo.physicsBody?.collisionBitMask = PhysicsCategory.Edge
-        halo.physicsBody?.contactTestBitMask = PhysicsCategory.Ball | PhysicsCategory.Shield
+        halo.physicsBody?.contactTestBitMask = PhysicsCategory.Ball | PhysicsCategory.Shield | PhysicsCategory.LifeBar
         
         let direction = radiansToVector(CGFloat.random(min: haloLowAngle, max: haloHighAngle))
         
@@ -192,6 +202,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Shield {
             // collision between halo & shield
+            addExplosion(firstBody.node!.position)
+            
+            firstBody.node?.removeFromParent()
+            secondBody.node?.removeFromParent()
+        }
+        
+        if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.LifeBar {
+            // collision between halo & life bar
             addExplosion(firstBody.node!.position)
             
             firstBody.node?.removeFromParent()
