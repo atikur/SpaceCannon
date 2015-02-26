@@ -11,10 +11,11 @@ import SpriteKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     struct PhysicsCategory {
-        static let None: UInt32 = 0
-        static let Halo: UInt32 = 0b1
-        static let Ball: UInt32 = 0b10
-        static let Edge: UInt32 = 0b100
+        static let None: UInt32     = 0
+        static let Halo: UInt32     = 0b1
+        static let Ball: UInt32     = 0b10
+        static let Edge: UInt32     = 0b100
+        static let Shield: UInt32   = 0b1000
     }
     
     var mainLayer: SKNode!
@@ -105,6 +106,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ])
         
         self.runAction(SKAction.repeatActionForever(incrementAmmoAction))
+        
+        // setup shields
+        for i in 0...5 {
+            let shield = SKSpriteNode(imageNamed: "Block")
+            shield.position = CGPointMake(CGFloat(35 + (50 * i)), 90)
+            shield.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(32, 9))
+            shield.physicsBody?.categoryBitMask = PhysicsCategory.Shield
+            shield.physicsBody?.collisionBitMask = PhysicsCategory.None
+            mainLayer.addChild(shield)
+        }
     }
     
     func shoot() {
@@ -144,7 +155,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         halo.physicsBody = SKPhysicsBody(circleOfRadius: halo.size.width/2)
         halo.physicsBody?.categoryBitMask = PhysicsCategory.Halo
         halo.physicsBody?.collisionBitMask = PhysicsCategory.Edge
-        halo.physicsBody?.contactTestBitMask = PhysicsCategory.Ball
+        halo.physicsBody?.contactTestBitMask = PhysicsCategory.Ball | PhysicsCategory.Shield
         
         let direction = radiansToVector(CGFloat.random(min: haloLowAngle, max: haloHighAngle))
         
@@ -173,6 +184,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Ball {
             // collision between halo & ball
+            addExplosion(firstBody.node!.position)
+            
+            firstBody.node?.removeFromParent()
+            secondBody.node?.removeFromParent()
+        }
+        
+        if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Shield {
+            // collision between halo & shield
             addExplosion(firstBody.node!.position)
             
             firstBody.node?.removeFromParent()
