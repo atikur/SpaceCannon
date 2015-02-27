@@ -29,6 +29,11 @@
 		471F201B1A91B0AF00D5DDEF /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471F201A1A91B0AF00D5DDEF /* MyUtils.swift */; };
 		476685221A9E26440089138D /* HaloExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 476685201A9E26440089138D /* HaloExplosion.sks */; };
 		476685231A9E26440089138D /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 476685211A9E26440089138D /* spark.png */; };
+		47A7BB0D1AA02932006B90AC /* Bounce.caf in Resources */ = {isa = PBXBuildFile; fileRef = 47A7BB081AA02932006B90AC /* Bounce.caf */; };
+		47A7BB0E1AA02932006B90AC /* DeepExplosion.caf in Resources */ = {isa = PBXBuildFile; fileRef = 47A7BB091AA02932006B90AC /* DeepExplosion.caf */; };
+		47A7BB0F1AA02932006B90AC /* Explosion.caf in Resources */ = {isa = PBXBuildFile; fileRef = 47A7BB0A1AA02932006B90AC /* Explosion.caf */; };
+		47A7BB101AA02932006B90AC /* Laser.caf in Resources */ = {isa = PBXBuildFile; fileRef = 47A7BB0B1AA02932006B90AC /* Laser.caf */; };
+		47A7BB111AA02932006B90AC /* Zap.caf in Resources */ = {isa = PBXBuildFile; fileRef = 47A7BB0C1AA02932006B90AC /* Zap.caf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +73,11 @@
 		471F201A1A91B0AF00D5DDEF /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
 		476685201A9E26440089138D /* HaloExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = HaloExplosion.sks; path = ../HaloExplosion.sks; sourceTree = "<group>"; };
 		476685211A9E26440089138D /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = ../spark.png; sourceTree = "<group>"; };
+		47A7BB081AA02932006B90AC /* Bounce.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Bounce.caf; sourceTree = "<group>"; };
+		47A7BB091AA02932006B90AC /* DeepExplosion.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DeepExplosion.caf; sourceTree = "<group>"; };
+		47A7BB0A1AA02932006B90AC /* Explosion.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Explosion.caf; sourceTree = "<group>"; };
+		47A7BB0B1AA02932006B90AC /* Laser.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Laser.caf; sourceTree = "<group>"; };
+		47A7BB0C1AA02932006B90AC /* Zap.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zap.caf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +119,7 @@
 		471F1FDA1A91A81500D5DDEF /* Space Cannon */ = {
 			isa = PBXGroup;
 			children = (
+				47A7BB071AA02932006B90AC /* Sounds */,
 				471F20011A91A83000D5DDEF /* images */,
 				471F1FDD1A91A81500D5DDEF /* AppDelegate.swift */,
 				471F1FE11A91A81500D5DDEF /* GameScene.swift */,
@@ -166,6 +177,18 @@
 				471F200D1A91A83000D5DDEF /* Starfield@2x.png */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		47A7BB071AA02932006B90AC /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				47A7BB081AA02932006B90AC /* Bounce.caf */,
+				47A7BB091AA02932006B90AC /* DeepExplosion.caf */,
+				47A7BB0A1AA02932006B90AC /* Explosion.caf */,
+				47A7BB0B1AA02932006B90AC /* Laser.caf */,
+				47A7BB0C1AA02932006B90AC /* Zap.caf */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,14 +275,19 @@
 				471F20161A91A83000D5DDEF /* BlueBar@2x.png in Resources */,
 				471F1FEC1A91A81500D5DDEF /* LaunchScreen.xib in Resources */,
 				471F20131A91A83000D5DDEF /* Ammo5@2x.png in Resources */,
+				47A7BB111AA02932006B90AC /* Zap.caf in Resources */,
 				471F200F1A91A83000D5DDEF /* Ammo1@2x.png in Resources */,
+				47A7BB0E1AA02932006B90AC /* DeepExplosion.caf in Resources */,
+				47A7BB0F1AA02932006B90AC /* Explosion.caf in Resources */,
 				476685221A9E26440089138D /* HaloExplosion.sks in Resources */,
 				471F20141A91A83000D5DDEF /* Ball@2x.png in Resources */,
 				471F1FE91A91A81500D5DDEF /* Images.xcassets in Resources */,
+				47A7BB0D1AA02932006B90AC /* Bounce.caf in Resources */,
 				471F20111A91A83000D5DDEF /* Ammo3@2x.png in Resources */,
 				471F1FE71A91A81500D5DDEF /* Main.storyboard in Resources */,
 				471F200E1A91A83000D5DDEF /* Ammo0@2x.png in Resources */,
 				471F20101A91A83000D5DDEF /* Ammo2@2x.png in Resources */,
+				47A7BB101AA02932006B90AC /* Laser.caf in Resources */,
 				471F20151A91A83000D5DDEF /* Block@2x.png in Resources */,
 				471F20191A91A83000D5DDEF /* Starfield@2x.png in Resources */,
 				471F20171A91A83000D5DDEF /* Cannon@2x.png in Resources */,

@@ -29,6 +29,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let haloHighAngle: CGFloat = 340.0 * CGFloat(M_PI/180)
     let haloSpeed: CGFloat = 100.0
     
+    let bounceSound = SKAction.playSoundFileNamed("Bounce.caf", waitForCompletion: false)
+    let deepExplosionSound = SKAction.playSoundFileNamed("DeepExplosion.caf", waitForCompletion: false)
+    let explosionSound = SKAction.playSoundFileNamed("Explosion.caf", waitForCompletion: false)
+    let laserSound = SKAction.playSoundFileNamed("Laser.caf", waitForCompletion: false)
+    let zapSound = SKAction.playSoundFileNamed("Zap.caf", waitForCompletion: false)
+    
     var ammo: Int! {
         didSet {
             if ammo >= 0 && ammo <= 5 {
@@ -140,6 +146,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
         ball.physicsBody?.categoryBitMask = PhysicsCategory.Ball
         ball.physicsBody?.collisionBitMask = PhysicsCategory.Edge
+        ball.physicsBody?.contactTestBitMask = PhysicsCategory.Edge
         ball.physicsBody?.velocity = CGVectorMake(direction.dx * ballSpeed, direction.dy * ballSpeed)
         
         ball.physicsBody?.linearDamping = 0.0
@@ -149,6 +156,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         mainLayer.addChild(ball)
         
         ammo = ammo - 1
+        
+        self.runAction(laserSound)
     }
     
     func spawnHalo() {
@@ -162,7 +171,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         halo.physicsBody = SKPhysicsBody(circleOfRadius: halo.size.width/2)
         halo.physicsBody?.categoryBitMask = PhysicsCategory.Halo
         halo.physicsBody?.collisionBitMask = PhysicsCategory.Edge
-        halo.physicsBody?.contactTestBitMask = PhysicsCategory.Ball | PhysicsCategory.Shield | PhysicsCategory.LifeBar
+        halo.physicsBody?.contactTestBitMask = PhysicsCategory.Ball | PhysicsCategory.Shield | PhysicsCategory.LifeBar | PhysicsCategory.Edge
         
         let direction = radiansToVector(CGFloat.random(min: haloLowAngle, max: haloHighAngle))
         
@@ -190,9 +199,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Ball {
-            score = score + 1
             // collision between halo & ball
+            score = score + 1
+            
             addExplosion(firstBody.node!.position)
+            self.runAction(explosionSound)
             
             firstBody.node?.removeFromParent()
             secondBody.node?.removeFromParent()
@@ -201,6 +212,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Shield {
             // collision between halo & shield
             addExplosion(firstBody.node!.position)
+            self.runAction(explosionSound)
             
             firstBody.node?.removeFromParent()
             secondBody.node?.removeFromParent()
@@ -208,9 +220,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.LifeBar {
             // collision between halo & life bar
+            self.runAction(deepExplosionSound)
             
             secondBody.node?.removeFromParent()
             gameOver()
+        }
+        
+        if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Edge {
+            // collision between halo & edge
+            self.runAction(zapSound)
+        }
+        
+        if firstBody.categoryBitMask == PhysicsCategory.Ball && secondBody.categoryBitMask == PhysicsCategory.Edge {
+            //collision between ball & edge
+            self.runAction(bounceSound)
         }
     }
     
