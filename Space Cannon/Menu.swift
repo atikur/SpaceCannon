@@ -12,17 +12,23 @@ class Menu: SKNode {
     var scoreLabel: SKLabelNode!
     var topScoreLabel: SKLabelNode!
     
-    var score: Int! {
+    var score: Int = 0 {
         didSet {
             scoreLabel.text = "\(score)"
         }
     }
     
-    var topScore: Int! {
-        didSet {
+    var topScore: Int {
+        set {
+            NSUserDefaults.standardUserDefaults().setInteger(score, forKey: "topScore")
+
             topScoreLabel.text = "\(topScore)"
         }
+        get {
+            return NSUserDefaults.standardUserDefaults().integerForKey("topScore")
+        }
     }
+    
     
     override init() {
         super.init()
@@ -48,12 +54,9 @@ class Menu: SKNode {
         
         topScoreLabel = SKLabelNode(fontNamed: "Din Alternate")
         topScoreLabel.fontSize = 30
-        topScoreLabel.text = "0"
+        topScoreLabel.text = "\(topScore)"
         topScoreLabel.position = CGPointMake(48, 50)
         self.addChild(topScoreLabel)
-        
-        score = 0
-        topScore = 0
     }
 
     required init?(coder aDecoder: NSCoder) {
