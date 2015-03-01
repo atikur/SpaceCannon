@@ -227,6 +227,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addExplosion(firstBody.node!.position)
             self.runAction(explosionSound)
             
+            // restrict halo collision with single shield
+            firstBody.categoryBitMask = PhysicsCategory.None
+            
             firstBody.node?.removeFromParent()
             secondBody.node?.removeFromParent()
         }
