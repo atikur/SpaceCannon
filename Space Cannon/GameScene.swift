@@ -126,6 +126,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // initial values
         ammo = 5
         score = 0
+        scoreLabel.hidden = true
         
         // increment ammo
         let incrementAmmoAction = SKAction.sequence([
@@ -277,6 +278,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         isGameOver = false
         menu.hidden = true
+        scoreLabel.hidden = false
     }
     
     func gameOver() {
@@ -296,8 +298,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             node.removeFromParent()
         })
         
+        menu.score = self.score
+        if self.score > menu.topScore {
+            menu.topScore = self.score
+        }
+        
         isGameOver = true
         menu.hidden = false
+        scoreLabel.hidden = true
     }
     
     func addExplosion(point: CGPoint) {

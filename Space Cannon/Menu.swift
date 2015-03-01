@@ -9,6 +9,21 @@
 import SpriteKit
 
 class Menu: SKNode {
+    var scoreLabel: SKLabelNode!
+    var topScoreLabel: SKLabelNode!
+    
+    var score: Int! {
+        didSet {
+            scoreLabel.text = "\(score)"
+        }
+    }
+    
+    var topScore: Int! {
+        didSet {
+            topScoreLabel.text = "\(topScore)"
+        }
+    }
+    
     override init() {
         super.init()
         
@@ -24,6 +39,21 @@ class Menu: SKNode {
         playButton.name = "PlayButton"
         playButton.position = CGPointMake(0, 0)
         self.addChild(playButton)
+        
+        scoreLabel = SKLabelNode(fontNamed: "Din Alternate")
+        scoreLabel.fontSize = 30
+        scoreLabel.text = "0"
+        scoreLabel.position = CGPointMake(-52, 50)
+        self.addChild(scoreLabel)
+        
+        topScoreLabel = SKLabelNode(fontNamed: "Din Alternate")
+        topScoreLabel.fontSize = 30
+        topScoreLabel.text = "0"
+        topScoreLabel.position = CGPointMake(48, 50)
+        self.addChild(topScoreLabel)
+        
+        score = 0
+        topScore = 0
     }
 
     required init?(coder aDecoder: NSCoder) {
