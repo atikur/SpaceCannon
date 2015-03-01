@@ -362,6 +362,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 node.removeFromParent()
             }
         })
+        
+        // remove halo if they move to bottom of the screen
+        mainLayer.enumerateChildNodesWithName("halo", usingBlock: {
+            node, _ in
+            if node.position.y + node.frame.size.height < 0  {
+                node.removeFromParent();
+            }
+        })
     }
     
     override func update(currentTime: CFTimeInterval) {
