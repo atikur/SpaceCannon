@@ -67,7 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let leftEdge = SKNode()
         leftEdge.physicsBody = SKPhysicsBody(
             edgeFromPoint: CGPointZero,
-            toPoint: CGPointMake(0, size.height))
+            toPoint: CGPointMake(0, size.height + 100))
         leftEdge.physicsBody?.categoryBitMask = PhysicsCategory.Edge
         
         leftEdge.position = CGPointZero
@@ -76,7 +76,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let rightEdge = SKNode()
         rightEdge.physicsBody = SKPhysicsBody(
             edgeFromPoint: CGPointZero,
-            toPoint: CGPointMake(0, size.height))
+            toPoint: CGPointMake(0, size.height + 100))
         rightEdge.physicsBody?.categoryBitMask = PhysicsCategory.Edge
         rightEdge.position = CGPointMake(size.width, 0)
         self.addChild(rightEdge)
