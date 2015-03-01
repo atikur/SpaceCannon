@@ -27,6 +27,10 @@
 		471F20181A91A83000D5DDEF /* Halo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 471F200C1A91A83000D5DDEF /* Halo@2x.png */; };
 		471F20191A91A83000D5DDEF /* Starfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 471F200D1A91A83000D5DDEF /* Starfield@2x.png */; };
 		471F201B1A91B0AF00D5DDEF /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 471F201A1A91B0AF00D5DDEF /* MyUtils.swift */; };
+		472278F41AA2AF8500D4F1B9 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472278F31AA2AF8500D4F1B9 /* Menu.swift */; };
+		475F602B1AA0363500357B27 /* PlayButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 475F60281AA0363500357B27 /* PlayButton@2x.png */; };
+		475F602C1AA0363500357B27 /* ScoreBoard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 475F60291AA0363500357B27 /* ScoreBoard@2x.png */; };
+		475F602D1AA0363500357B27 /* Title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 475F602A1AA0363500357B27 /* Title@2x.png */; };
 		476685221A9E26440089138D /* HaloExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 476685201A9E26440089138D /* HaloExplosion.sks */; };
 		476685231A9E26440089138D /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 476685211A9E26440089138D /* spark.png */; };
 		47A7BB0D1AA02932006B90AC /* Bounce.caf in Resources */ = {isa = PBXBuildFile; fileRef = 47A7BB081AA02932006B90AC /* Bounce.caf */; };
@@ -71,6 +75,10 @@
 		471F200C1A91A83000D5DDEF /* Halo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Halo@2x.png"; sourceTree = "<group>"; };
 		471F200D1A91A83000D5DDEF /* Starfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Starfield@2x.png"; sourceTree = "<group>"; };
 		471F201A1A91B0AF00D5DDEF /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
+		472278F31AA2AF8500D4F1B9 /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		475F60281AA0363500357B27 /* PlayButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PlayButton@2x.png"; sourceTree = "<group>"; };
+		475F60291AA0363500357B27 /* ScoreBoard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ScoreBoard@2x.png"; sourceTree = "<group>"; };
+		475F602A1AA0363500357B27 /* Title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Title@2x.png"; sourceTree = "<group>"; };
 		476685201A9E26440089138D /* HaloExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = HaloExplosion.sks; path = ../HaloExplosion.sks; sourceTree = "<group>"; };
 		476685211A9E26440089138D /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = ../spark.png; sourceTree = "<group>"; };
 		47A7BB081AA02932006B90AC /* Bounce.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Bounce.caf; sourceTree = "<group>"; };
@@ -123,6 +131,7 @@
 				471F20011A91A83000D5DDEF /* images */,
 				471F1FDD1A91A81500D5DDEF /* AppDelegate.swift */,
 				471F1FE11A91A81500D5DDEF /* GameScene.swift */,
+				472278F31AA2AF8500D4F1B9 /* Menu.swift */,
 				471F1FE31A91A81500D5DDEF /* GameViewController.swift */,
 				471F201A1A91B0AF00D5DDEF /* MyUtils.swift */,
 				471F1FE51A91A81500D5DDEF /* Main.storyboard */,
@@ -163,6 +172,9 @@
 		471F20011A91A83000D5DDEF /* images */ = {
 			isa = PBXGroup;
 			children = (
+				475F60281AA0363500357B27 /* PlayButton@2x.png */,
+				475F60291AA0363500357B27 /* ScoreBoard@2x.png */,
+				475F602A1AA0363500357B27 /* Title@2x.png */,
 				471F20021A91A83000D5DDEF /* Ammo0@2x.png */,
 				471F20031A91A83000D5DDEF /* Ammo1@2x.png */,
 				471F20041A91A83000D5DDEF /* Ammo2@2x.png */,
@@ -273,6 +285,7 @@
 			files = (
 				471F20181A91A83000D5DDEF /* Halo@2x.png in Resources */,
 				471F20161A91A83000D5DDEF /* BlueBar@2x.png in Resources */,
+				475F602C1AA0363500357B27 /* ScoreBoard@2x.png in Resources */,
 				471F1FEC1A91A81500D5DDEF /* LaunchScreen.xib in Resources */,
 				471F20131A91A83000D5DDEF /* Ammo5@2x.png in Resources */,
 				47A7BB111AA02932006B90AC /* Zap.caf in Resources */,
@@ -289,10 +302,12 @@
 				471F20101A91A83000D5DDEF /* Ammo2@2x.png in Resources */,
 				47A7BB101AA02932006B90AC /* Laser.caf in Resources */,
 				471F20151A91A83000D5DDEF /* Block@2x.png in Resources */,
+				475F602D1AA0363500357B27 /* Title@2x.png in Resources */,
 				471F20191A91A83000D5DDEF /* Starfield@2x.png in Resources */,
 				471F20171A91A83000D5DDEF /* Cannon@2x.png in Resources */,
 				471F20121A91A83000D5DDEF /* Ammo4@2x.png in Resources */,
 				476685231A9E26440089138D /* spark.png in Resources */,
+				475F602B1AA0363500357B27 /* PlayButton@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +329,7 @@
 				471F1FE41A91A81500D5DDEF /* GameViewController.swift in Sources */,
 				471F1FDE1A91A81500D5DDEF /* AppDelegate.swift in Sources */,
 				471F201B1A91B0AF00D5DDEF /* MyUtils.swift in Sources */,
+				472278F41AA2AF8500D4F1B9 /* Menu.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

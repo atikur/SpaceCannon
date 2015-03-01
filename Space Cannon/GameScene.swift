@@ -29,6 +29,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let haloHighAngle: CGFloat = 340.0 * CGFloat(M_PI/180)
     let haloSpeed: CGFloat = 100.0
     
+    var isGameOver: Bool = false
+    var menu: Menu!
+    
     let bounceSound = SKAction.playSoundFileNamed("Bounce.caf", waitForCompletion: false)
     let deepExplosionSound = SKAction.playSoundFileNamed("DeepExplosion.caf", waitForCompletion: false)
     let explosionSound = SKAction.playSoundFileNamed("Explosion.caf", waitForCompletion: false)
@@ -108,6 +111,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ammoDisplay.position = cannon.position
         self.addChild(ammoDisplay)
         
+        // setup score label
+        scoreLabel = SKLabelNode(fontNamed: "Din Alternate")
+        scoreLabel.position = CGPointMake(15, 10)
+        scoreLabel.horizontalAlignmentMode = .Left
+        scoreLabel.fontSize = 15
+        self.addChild(scoreLabel)
+    
+        // setup menu
+        menu = Menu()
+        menu.position = CGPointMake(self.size.width/2, self.size.height - 220)
+        self.addChild(menu)
+        
+        // initial values
+        ammo = 5
+        score = 0
+        
         // increment ammo
         let incrementAmmoAction = SKAction.sequence([
             SKAction.waitForDuration(1),
@@ -120,14 +139,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.runAction(SKAction.repeatActionForever(incrementAmmoAction))
         
-        // setup score label
-        scoreLabel = SKLabelNode(fontNamed: "Din Alternate")
-        scoreLabel.position = CGPointMake(15, 10)
-        scoreLabel.horizontalAlignmentMode = .Left
-        scoreLabel.fontSize = 15
-        self.addChild(scoreLabel)
-        
-        newGame()
+        isGameOver = true
     }
     
     func shoot() {
@@ -262,6 +274,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             toPoint: CGPointMake(lifeBar.size.width/2, 0))
         lifeBar.physicsBody?.categoryBitMask = PhysicsCategory.LifeBar
         mainLayer.addChild(lifeBar)
+        
+        isGameOver = false
+        menu.hidden = true
     }
     
     func gameOver() {
@@ -281,13 +296,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             node.removeFromParent()
         })
         
-        // start new game
-        let newGameAction = SKAction.sequence([
-            SKAction.waitForDuration(1.5),
-            SKAction.runBlock(newGame)
-            ])
-        
-        self.runAction(newGameAction)
+        isGameOver = true
+        menu.hidden = false
     }
     
     func addExplosion(point: CGPoint) {
@@ -307,7 +317,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Called when a touch begins */
         
         for touch: AnyObject in touches {
-            didShoot = true
+            if !isGameOver {
+                didShoot = true
+            }
+        }
+    }
+    
+    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+        for touch: AnyObject in touches {
+            if isGameOver {
+                let point = (touch as UITouch).locationInNode(menu)
+                let node: SKNode = menu.nodeAtPoint(point)
+                
+                if node.name == "PlayButton" {
+                    newGame()
+                    isGameOver = false
+                    menu.hidden = true
+                }
+            }
         }
     }
     
