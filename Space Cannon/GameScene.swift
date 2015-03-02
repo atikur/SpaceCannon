@@ -23,6 +23,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var cannon: SKSpriteNode!
     var didShoot = false
     var scoreLabel: SKLabelNode!
+    var pointsLabel: SKLabelNode!
     
     let ballSpeed: CGFloat = 1000.0
     let haloLowAngle: CGFloat = 200.0 * CGFloat(M_PI/180)
@@ -50,6 +51,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var score: Int! {
         didSet {
             scoreLabel.text = "Score: \(score)"
+        }
+    }
+    
+    var pointsValue: Int! {
+        didSet {
+            pointsLabel.text = "Points: x\(pointsValue)"
         }
     }
     
@@ -117,6 +124,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.horizontalAlignmentMode = .Left
         scoreLabel.fontSize = 15
         self.addChild(scoreLabel)
+        
+        // setup points label
+        pointsLabel = SKLabelNode(fontNamed: "Din Alternate")
+        pointsLabel.position = CGPointMake(15, 30)
+        pointsLabel.horizontalAlignmentMode = .Left
+        pointsLabel.fontSize = 15
+        self.addChild(pointsLabel)
     
         // setup menu
         menu = Menu()
@@ -126,7 +140,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // initial values
         ammo = 5
         score = 0
+        pointsValue = 1
         scoreLabel.hidden = true
+        pointsLabel.hidden = true
         
         // increment ammo
         let incrementAmmoAction = SKAction.sequence([
@@ -211,6 +227,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         halo.physicsBody?.linearDamping = 0.0
         halo.physicsBody?.friction = 0.0
         
+        // random point multiplier
+        if !isGameOver && arc4random_uniform(6) == 0 {
+            halo.texture = SKTexture(imageNamed: "HaloX")
+            halo.userData = NSMutableDictionary(object: true as Bool, forKey: "Multiplier")
+        }
+        
         mainLayer.addChild(halo)
     }
     
@@ -228,7 +250,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Ball {
             // collision between halo & ball
-            score = score + 1
+            score = score + pointsValue
+            
+            // increase pointsValue if hit a Multiplier Halo
+            if let isMultiplier = (firstBody.node?.userData?.valueForKey("Multiplier") as? Bool) {
+                pointsValue = pointsValue + 1
+            }
             
             addExplosion(firstBody.node!.position)
             self.runAction(explosionSound)
@@ -271,9 +298,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 if (firstBody.node! as Ball).bounceCount > 3 {
                     firstBody.node?.removeFromParent()
+                    pointsValue = 1
                 }
             }
-            
             
             self.runAction(bounceSound)
         }
@@ -282,6 +309,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func newGame() {
         ammo = 5
         score = 0
+        pointsValue = 1
         let spawnHaloAction = self.actionForKey("SpawnHalo")
         spawnHaloAction?.speed = 1.0
         
@@ -310,6 +338,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         isGameOver = false
         menu.hidden = true
         scoreLabel.hidden = false
+        pointsLabel.hidden = false
     }
     
     func gameOver() {
@@ -337,6 +366,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         isGameOver = true
         menu.hidden = false
         scoreLabel.hidden = true
+        pointsLabel.hidden = true
     }
     
     func addExplosion(point: CGPoint) {
@@ -392,6 +422,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if !CGRectContainsPoint(self.frame, node.position) {
                 node.removeFromParent()
+                self.pointsValue = 1
             }
         })
         
