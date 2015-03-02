@@ -103,7 +103,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let waitAction = SKAction.waitForDuration(2, withRange: 1)
         
         let spawnHaloSequence = SKAction.sequence([spawnHaloAction, waitAction])
-        self.runAction(SKAction.repeatActionForever(spawnHaloSequence))
+        self.runAction(SKAction.repeatActionForever(spawnHaloSequence), withKey: "SpawnHalo")
         
         // setup ammo
         ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
@@ -174,6 +174,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func spawnHalo() {
+        // increase spawn speed
+        if let spawnHaloAction = self.actionForKey("SpawnHalo") {
+            if spawnHaloAction.speed < 1.5 {
+                spawnHaloAction.speed = spawnHaloAction.speed + 0.01
+            }
+            println(spawnHaloAction.speed)
+        }
+        
         // create Halo node
         let halo = SKSpriteNode(imageNamed: "Halo")
         halo.name = "halo"
@@ -256,6 +264,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func newGame() {
         ammo = 5
         score = 0
+        let spawnHaloAction = self.actionForKey("SpawnHalo")
+        spawnHaloAction?.speed = 1.0
         
         mainLayer.removeAllChildren()
         
