@@ -148,7 +148,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
-        let ball = SKSpriteNode(imageNamed: "Ball")
+        let ball = Ball(imageNamed: "Ball")
         let direction = radiansToVector(cannon.zRotation)
         
         ball.name = "ball"
@@ -168,6 +168,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         mainLayer.addChild(ball)
         
+        // add trail node
+        let path = NSBundle.mainBundle().pathForResource("BallTrail", ofType: "sks")!
+        let ballTrail = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as SKEmitterNode!
+        ballTrail.targetNode = mainLayer
+        ballTrail.position = ball.position
+        mainLayer.addChild(ballTrail)
+        ball.trail = ballTrail
+        
         ammo = ammo - 1
         
         self.runAction(laserSound)
@@ -179,7 +187,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if spawnHaloAction.speed < 1.5 {
                 spawnHaloAction.speed = spawnHaloAction.speed + 0.01
             }
-            println(spawnHaloAction.speed)
         }
         
         // create Halo node
@@ -368,6 +375,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // clean up balls that are out of frame
         mainLayer.enumerateChildNodesWithName("ball", usingBlock: {
             node, _ in
+            if let ball = node as? Ball {
+                ball.updateTrail()
+            }
+            
             if !CGRectContainsPoint(self.frame, node.position) {
                 node.removeFromParent()
             }
