@@ -11,6 +11,7 @@ import SpriteKit
 class Ball: SKSpriteNode {
    
     var trail: SKEmitterNode?
+    var bounceCount: Int = 0
     
     func updateTrail() {
         if let trail = trail {

@@ -263,7 +263,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if firstBody.categoryBitMask == PhysicsCategory.Ball && secondBody.categoryBitMask == PhysicsCategory.Edge {
-            //collision between ball & edge
+            // collision between ball & edge
+            
+            // after three bounce with edge, remove ball
+            if firstBody.node!.isKindOfClass(Ball) {
+                (firstBody.node! as Ball).bounceCount++
+                
+                if (firstBody.node! as Ball).bounceCount > 3 {
+                    firstBody.node?.removeFromParent()
+                }
+            }
+            
+            
             self.runAction(bounceSound)
         }
     }
