@@ -29,6 +29,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let haloLowAngle: CGFloat = 200.0 * CGFloat(M_PI/180)
     let haloHighAngle: CGFloat = 340.0 * CGFloat(M_PI/180)
     let haloSpeed: CGFloat = 100.0
+    var shieldPool: [SKSpriteNode]!
     
     var isGameOver: Bool = false
     var menu: Menu!
@@ -156,6 +157,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.runAction(SKAction.repeatActionForever(incrementAmmoAction))
         
+        // setup shield pool
+        shieldPool = []
+        
+        for i in 0...5 {
+            let shield = SKSpriteNode(imageNamed: "Block")
+            shield.name = "shield"
+            shield.position = CGPointMake(CGFloat(35 + (50 * i)), 90)
+            shield.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(32, 9))
+            shield.physicsBody?.categoryBitMask = PhysicsCategory.Shield
+            shield.physicsBody?.collisionBitMask = PhysicsCategory.None
+            shieldPool.append(shield)
+        }
+        
         isGameOver = true
     }
     
@@ -272,6 +286,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // restrict halo collision with single shield
             firstBody.categoryBitMask = PhysicsCategory.None
             
+            // add shield to pool
+            shieldPool.append(secondBody.node as SKSpriteNode)
+            
             firstBody.node?.removeFromParent()
             secondBody.node?.removeFromParent()
         }
@@ -315,14 +332,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         mainLayer.removeAllChildren()
         
-        // setup shields
-        for i in 0...5 {
-            let shield = SKSpriteNode(imageNamed: "Block")
-            shield.name = "shield"
-            shield.position = CGPointMake(CGFloat(35 + (50 * i)), 90)
-            shield.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(32, 9))
-            shield.physicsBody?.categoryBitMask = PhysicsCategory.Shield
-            shield.physicsBody?.collisionBitMask = PhysicsCategory.None
+        // add shields
+        while !shieldPool.isEmpty {
+            let shield = shieldPool.removeAtIndex(0)
             mainLayer.addChild(shield)
         }
         
@@ -355,6 +367,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         mainLayer.enumerateChildNodesWithName("shield", usingBlock: {
             node, _ in
+            self.shieldPool.append(node as SKSpriteNode)
             node.removeFromParent()
         })
         
