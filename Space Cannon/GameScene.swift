@@ -11,12 +11,13 @@ import SpriteKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     struct PhysicsCategory {
-        static let None: UInt32     = 0
-        static let Halo: UInt32     = 0b1
-        static let Ball: UInt32     = 0b10
-        static let Edge: UInt32     = 0b100
-        static let Shield: UInt32   = 0b1000
-        static let LifeBar: UInt32  = 0b10000
+        static let None: UInt32             = 0
+        static let Halo: UInt32             = 0b1
+        static let Ball: UInt32             = 0b10
+        static let Edge: UInt32             = 0b100
+        static let Shield: UInt32           = 0b1000
+        static let LifeBar: UInt32          = 0b10000
+        static let ShieldPowerUp: UInt32    = 0b100000
     }
     
     var mainLayer: SKNode!
@@ -113,6 +114,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let spawnHaloSequence = SKAction.sequence([spawnHaloAction, waitAction])
         self.runAction(SKAction.repeatActionForever(spawnHaloSequence), withKey: "SpawnHalo")
         
+        // spawn shield power up
+        let spawnShieldPowerUpAction = SKAction.sequence([
+            SKAction.waitForDuration(5, withRange: 2),
+            SKAction.runBlock(spawnShieldPowerUp)
+            ])
+        self.runAction(SKAction.repeatActionForever(spawnShieldPowerUpAction))
+        
         // setup ammo
         ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
         ammoDisplay.anchorPoint = CGPointMake(0.5, 0)
@@ -189,7 +197,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
         ball.physicsBody?.categoryBitMask = PhysicsCategory.Ball
         ball.physicsBody?.collisionBitMask = PhysicsCategory.Edge
-        ball.physicsBody?.contactTestBitMask = PhysicsCategory.Edge
+        ball.physicsBody?.contactTestBitMask = PhysicsCategory.Edge | PhysicsCategory.ShieldPowerUp
         ball.physicsBody?.velocity = CGVectorMake(direction.dx * ballSpeed, direction.dy * ballSpeed)
         
         ball.physicsBody?.linearDamping = 0.0
@@ -248,6 +256,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         mainLayer.addChild(halo)
+    }
+    
+    func spawnShieldPowerUp() {
+        let shieldPowerUp = SKSpriteNode(imageNamed: "Block")
+        shieldPowerUp.name = "shieldPowerUp"
+        shieldPowerUp.position = CGPointMake(self.size.width + shieldPowerUp.size.width, CGFloat.random(min: 150, max: self.size.height - 100))
+        shieldPowerUp.physicsBody = SKPhysicsBody(rectangleOfSize: CGSizeMake(32, 9))
+        shieldPowerUp.physicsBody?.categoryBitMask = PhysicsCategory.ShieldPowerUp
+        shieldPowerUp.physicsBody?.velocity = CGVectorMake(-100, CGFloat.random(min: -40, max: 40))
+        shieldPowerUp.physicsBody?.angularVelocity = CGFloat(M_PI)
+        shieldPowerUp.physicsBody?.linearDamping = 0.0
+        shieldPowerUp.physicsBody?.angularDamping = 0.0
+        shieldPowerUp.physicsBody?.collisionBitMask = PhysicsCategory.None
+        mainLayer.addChild(shieldPowerUp)
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
@@ -320,6 +342,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
             self.runAction(bounceSound)
+        }
+        
+        if firstBody.categoryBitMask == PhysicsCategory.Ball && secondBody.categoryBitMask == PhysicsCategory.ShieldPowerUp {
+            // collision between ball & shield power up
+            if !shieldPool.isEmpty {
+                let randomIndex = Int(arc4random_uniform(UInt32(shieldPool.count)))
+                let shield = shieldPool.removeAtIndex(randomIndex)
+                mainLayer.addChild(shield)
+            }
+            
+            firstBody.node?.removeFromParent()
+            secondBody.node?.removeFromParent()
         }
     }
     
@@ -443,6 +477,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         mainLayer.enumerateChildNodesWithName("halo", usingBlock: {
             node, _ in
             if node.position.y + node.frame.size.height < 0  {
+                node.removeFromParent();
+            }
+        })
+        
+        // remove shield power ups
+        mainLayer.enumerateChildNodesWithName("shieldPowerUp", usingBlock: {
+            node, _ in
+            if node.position.x + node.frame.size.width < 0 {
                 node.removeFromParent();
             }
         })
