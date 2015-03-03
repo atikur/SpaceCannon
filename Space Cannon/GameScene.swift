@@ -18,6 +18,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         static let Shield: UInt32           = 0b1000
         static let LifeBar: UInt32          = 0b10000
         static let ShieldPowerUp: UInt32    = 0b100000
+        static let MultiShotPowerUp: UInt32 = 0b1000000
     }
     
     var mainLayer: SKNode!
@@ -34,6 +35,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var isGameOver: Bool = false
     var menu: Menu!
+    
+    var numberOfHaloDestroyed: Int!
+    var isMultiShotMode = false
     
     let bounceSound = SKAction.playSoundFileNamed("Bounce.caf", waitForCompletion: false)
     let deepExplosionSound = SKAction.playSoundFileNamed("DeepExplosion.caf", waitForCompletion: false)
@@ -152,6 +156,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pointsValue = 1
         scoreLabel.hidden = true
         pointsLabel.hidden = true
+        numberOfHaloDestroyed = 0
+        isMultiShotMode = false
         
         // increment ammo
         let incrementAmmoAction = SKAction.sequence([
@@ -163,7 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             ])
         
-        self.runAction(SKAction.repeatActionForever(incrementAmmoAction))
+        self.runAction(SKAction.repeatActionForever(incrementAmmoAction), withKey: "incrementAmmoAction")
         
         // setup shield pool
         shieldPool = []
@@ -186,8 +192,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
-        let ball = Ball(imageNamed: "Ball")
         let direction = radiansToVector(cannon.zRotation)
+        
+        shootAtDirection(direction)
+        
+        ammo = ammo - 1
+        
+        self.runAction(laserSound)
+    }
+    
+    func multiShoot() {
+        ammo = ammo - 1
+        
+        //let direction = radiansToVector(cannon.zRotation)
+        let angles: [CGFloat] = [-0.2, 0.0, 0.2]
+        
+        for i in 0...2 {
+            let direction = angles[i] + cannon.zRotation
+            shootAtDirection(radiansToVector(direction))
+        }
+        
+        if ammo <= 0 {
+            if let incrementAmmoAction = self.actionForKey("incrementAmmoAction") {
+                incrementAmmoAction.speed = 1.0
+            }
+            cannon.texture = SKTexture(imageNamed: "Cannon")
+            
+            isMultiShotMode = false
+            ammo = 5
+        }
+    }
+    
+    func shootAtDirection(direction: CGVector) {
+        let ball = Ball(imageNamed: "Ball")
         
         ball.name = "ball"
         ball.position = CGPointMake(
@@ -197,7 +234,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
         ball.physicsBody?.categoryBitMask = PhysicsCategory.Ball
         ball.physicsBody?.collisionBitMask = PhysicsCategory.Edge
-        ball.physicsBody?.contactTestBitMask = PhysicsCategory.Edge | PhysicsCategory.ShieldPowerUp
+        ball.physicsBody?.contactTestBitMask = PhysicsCategory.Edge | PhysicsCategory.ShieldPowerUp | PhysicsCategory.MultiShotPowerUp
         ball.physicsBody?.velocity = CGVectorMake(direction.dx * ballSpeed, direction.dy * ballSpeed)
         
         ball.physicsBody?.linearDamping = 0.0
@@ -213,10 +250,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ballTrail.position = ball.position
         mainLayer.addChild(ballTrail)
         ball.trail = ballTrail
-        
-        ammo = ammo - 1
-        
-        self.runAction(laserSound)
     }
     
     func spawnHalo() {
@@ -256,6 +289,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         mainLayer.addChild(halo)
+    }
+    
+    func spawnMultiShotPowerUp() {
+        let multiShotPowerUp = SKSpriteNode(imageNamed: "MultiShotPowerUp")
+        multiShotPowerUp.name = "multiShotPowerUp"
+        multiShotPowerUp.position = CGPointMake(-multiShotPowerUp.size.width, CGFloat.random(min: 150, max: self.size.height - 150))
+        multiShotPowerUp.physicsBody = SKPhysicsBody(circleOfRadius: multiShotPowerUp.size.width/2)
+        multiShotPowerUp.physicsBody?.categoryBitMask = PhysicsCategory.MultiShotPowerUp
+        multiShotPowerUp.physicsBody?.velocity = CGVectorMake(100, CGFloat.random(min: -40, max: 40))
+        multiShotPowerUp.physicsBody?.angularVelocity = CGFloat(M_PI)
+        multiShotPowerUp.physicsBody?.collisionBitMask = PhysicsCategory.None
+        multiShotPowerUp.physicsBody?.angularDamping = 0.0
+        multiShotPowerUp.physicsBody?.linearDamping = 0.0
+        mainLayer.addChild(multiShotPowerUp)
     }
     
     func spawnShieldPowerUp() {
@@ -300,6 +347,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             firstBody.node?.removeFromParent()
             secondBody.node?.removeFromParent()
+            
+            numberOfHaloDestroyed = numberOfHaloDestroyed + 1
+            
+            if numberOfHaloDestroyed == 15 {
+                numberOfHaloDestroyed = 0
+                self.runAction(SKAction.runBlock(spawnMultiShotPowerUp))
+            }
         }
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Shield {
@@ -361,12 +415,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             firstBody.node?.removeFromParent()
             secondBody.node?.removeFromParent()
         }
+        
+        if firstBody.categoryBitMask == PhysicsCategory.Ball && secondBody.categoryBitMask == PhysicsCategory.MultiShotPowerUp {
+            // collision between ball & multi-shot power up
+            if let node = firstBody.node {
+                addExplosion(node.position)
+                self.runAction(explosionSound)
+                
+                isMultiShotMode = true
+                
+                let incrementAmmoAction = self.actionForKey("incrementAmmoAction")
+                incrementAmmoAction?.speed = 0
+                ammo = 5
+                
+                cannon.texture = SKTexture(imageNamed: "GreenCannon")
+            }
+            
+            firstBody.node?.removeFromParent()
+            secondBody.node?.removeFromParent()
+        }
     }
     
     func newGame() {
         ammo = 5
         score = 0
         pointsValue = 1
+        numberOfHaloDestroyed = 0
+        isMultiShotMode = false
+        
         let spawnHaloAction = self.actionForKey("SpawnHalo")
         spawnHaloAction?.speed = 1.0
         
@@ -412,6 +488,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         })
         
         mainLayer.enumerateChildNodesWithName("shieldPowerUp", usingBlock: {
+            node, _ in
+            node.removeFromParent()
+        })
+        
+        mainLayer.enumerateChildNodesWithName("multiShotPowerUp", usingBlock: {
             node, _ in
             node.removeFromParent()
         })
@@ -467,7 +548,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didSimulatePhysics() {
         if didShoot {
-            self.shoot()
+            if isMultiShotMode {
+                self.multiShoot()
+            } else {
+                self.shoot()
+            }
             didShoot = false
         }
         
@@ -480,7 +565,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if !CGRectContainsPoint(self.frame, node.position) {
                 node.removeFromParent()
-                self.pointsValue = 1
+                if !self.isMultiShotMode {
+                    self.pointsValue = 1
+                }
             }
         })
         
@@ -497,6 +584,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             node, _ in
             if node.position.x + node.frame.size.width < 0 {
                 node.removeFromParent();
+            }
+        })
+        
+        // remove multi-shot power ups
+        mainLayer.enumerateChildNodesWithName("multiShotPowerUp", usingBlock: {
+            node, _ in
+            if node.position.x > self.frame.size.width + node.frame.size.width {
+                node.removeFromParent()
             }
         })
     }
