@@ -464,7 +464,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         mainLayer.addChild(lifeBar)
         
         isGameOver = false
-        menu.hidden = true
+        menu.hide()
         scoreLabel.hidden = false
         pointsLabel.hidden = false
     }
@@ -503,9 +503,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         isGameOver = true
-        menu.hidden = false
         scoreLabel.hidden = true
         pointsLabel.hidden = true
+        
+        self.runAction(SKAction.sequence([
+            SKAction.waitForDuration(1.0),
+            SKAction.runBlock {
+                self.menu.show()
+            }
+            ]))
     }
     
     func addExplosion(point: CGPoint) {
@@ -533,14 +539,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
         for touch: AnyObject in touches {
-            if isGameOver {
+            if isGameOver && menu.touchable {
                 let point = (touch as UITouch).locationInNode(menu)
                 let node: SKNode = menu.nodeAtPoint(point)
                 
                 if node.name == "PlayButton" {
                     newGame()
                     isGameOver = false
-                    menu.hidden = true
                 }
             }
         }

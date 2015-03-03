@@ -11,6 +11,7 @@ import SpriteKit
 class Menu: SKNode {
     var scoreLabel: SKLabelNode!
     var topScoreLabel: SKLabelNode!
+    var touchable = true
     
     var score: Int = 0 {
         didSet {
@@ -29,6 +30,15 @@ class Menu: SKNode {
         }
     }
     
+    func show() {
+        self.hidden = false
+        self.touchable = true
+    }
+    
+    func hide() {
+        self.hidden = true
+        self.touchable = false
+    }
     
     override init() {
         super.init()
