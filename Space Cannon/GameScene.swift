@@ -116,7 +116,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // spawn shield power up
         let spawnShieldPowerUpAction = SKAction.sequence([
-            SKAction.waitForDuration(5, withRange: 2),
+            SKAction.waitForDuration(15, withRange: 2),
             SKAction.runBlock(spawnShieldPowerUp)
             ])
         self.runAction(SKAction.repeatActionForever(spawnShieldPowerUpAction))
@@ -293,7 +293,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 pointsValue = pointsValue + 1
             }
             
-            addExplosion(firstBody.node!.position)
+            if let node = firstBody.node {
+                addExplosion(node.position)
+            }
             self.runAction(explosionSound)
             
             firstBody.node?.removeFromParent()
@@ -302,7 +304,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == PhysicsCategory.Halo && secondBody.categoryBitMask == PhysicsCategory.Shield {
             // collision between halo & shield
-            addExplosion(firstBody.node!.position)
+            if let node = firstBody.node {
+                addExplosion(node.position)
+            }
             self.runAction(explosionSound)
             
             // restrict halo collision with single shield
@@ -332,12 +336,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // collision between ball & edge
             
             // after three bounce with edge, remove ball
-            if firstBody.node!.isKindOfClass(Ball) {
-                (firstBody.node! as Ball).bounceCount++
-                
-                if (firstBody.node! as Ball).bounceCount > 3 {
-                    firstBody.node?.removeFromParent()
-                    pointsValue = 1
+            if let node = firstBody.node as? Ball {
+                if node.isKindOfClass(Ball) {
+                    node.bounceCount++
+                    
+                    if node.bounceCount > 3 {
+                        node.removeFromParent()
+                        pointsValue = 1
+                    }
                 }
             }
             
@@ -402,6 +408,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         mainLayer.enumerateChildNodesWithName("shield", usingBlock: {
             node, _ in
             self.shieldPool.append(node as SKSpriteNode)
+            node.removeFromParent()
+        })
+        
+        mainLayer.enumerateChildNodesWithName("shieldPowerUp", usingBlock: {
+            node, _ in
             node.removeFromParent()
         })
         
