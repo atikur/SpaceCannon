@@ -545,7 +545,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 if node.name == "PlayButton" {
                     newGame()
-                    isGameOver = false
                 }
             }
         }
